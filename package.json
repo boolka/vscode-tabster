@@ -1,0 +1,497 @@
+{
+    "name": "tabster",
+    "displayName": "Tabster",
+    "description": "Work with vscode tabs",
+    "icon": "assets/icons/icon.png",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.45.0",
+        "node": ">=12.0.0"
+    },
+    "categories": [
+        "Other",
+        "Visualization"
+    ],
+    "keywords": [
+        "tabs",
+        "tab groups",
+        "manage tabs",
+        "editors"
+    ],
+    "main": "./dist/extension",
+    "license": "MIT",
+    "publisher": "ribragimov",
+    "author": {
+        "name": "Ragim Ibragimov",
+        "email": "boolka989@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/boolka/vscode-tabster.git"
+    },
+    "bugs": {
+        "url": "https://github.com/boolka/vscode-tabster/issues"
+    },
+    "activationEvents": [
+        "onView:tabster",
+        "onView:tabsterHot",
+        "onCommand:tabster.refreshTreeView",
+        "onCommand:tabster.clearTreeView",
+        "onCommand:tabster.saveTabs",
+        "onCommand:tabster.activateTabs",
+        "onCommand:tabster.editTabsLabel",
+        "onCommand:tabster.removeTabs",
+        "onCommand:tabster.removeItem",
+        "onCommand:tabsterHot.activateTabs",
+        "onCommand:tabsterHot.refreshTreeView",
+        "onCommand:tabsterHot.clearTreeView",
+        "onCommand:tabsterHot.removeTabs",
+        "onCommand:tabsterHot.removeItem",
+        "onCommand:tabsterHot.save_set0",
+        "onCommand:tabsterHot.save_set1",
+        "onCommand:tabsterHot.save_set2",
+        "onCommand:tabsterHot.save_set3",
+        "onCommand:tabsterHot.save_set4",
+        "onCommand:tabsterHot.save_set5",
+        "onCommand:tabsterHot.save_set6",
+        "onCommand:tabsterHot.save_set7",
+        "onCommand:tabsterHot.save_set8",
+        "onCommand:tabsterHot.save_set9",
+        "onCommand:tabsterHot.activate_set0",
+        "onCommand:tabsterHot.activate_set1",
+        "onCommand:tabsterHot.activate_set2",
+        "onCommand:tabsterHot.activate_set3",
+        "onCommand:tabsterHot.activate_set4",
+        "onCommand:tabsterHot.activate_set5",
+        "onCommand:tabsterHot.activate_set6",
+        "onCommand:tabsterHot.activate_set7",
+        "onCommand:tabsterHot.activate_set8",
+        "onCommand:tabsterHot.activate_set9"
+    ],
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "icon": "assets/icons/tabster.svg",
+                    "id": "tabsterActivity",
+                    "title": "Tabster"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "group": "navigation",
+                    "command": "tabster.clearTreeView",
+                    "when": "view == tabster"
+                },
+                {
+                    "group": "navigation",
+                    "command": "tabster.refreshTreeView",
+                    "when": "view == tabster"
+                },
+                {
+                    "group": "navigation",
+                    "command": "tabsterHot.clearTreeView",
+                    "when": "view == tabsterHot"
+                },
+                {
+                    "group": "navigation",
+                    "command": "tabsterHot.refreshTreeView",
+                    "when": "view == tabsterHot"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "group": "inline",
+                    "command": "tabster.editTabsLabel",
+                    "when": "view == tabster && viewItem == tabs"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabster.activateTabs",
+                    "when": "view == tabster && viewItem == tabs"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabster.removeTabs",
+                    "when": "view == tabster && viewItem == tabs"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabster.removeItem",
+                    "when": "view == tabster && viewItem == item"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabsterHot.activateTabs",
+                    "when": "view == tabsterHot && viewItem == tabs"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabsterHot.removeTabs",
+                    "when": "view == tabsterHot && viewItem == tabs"
+                },
+                {
+                    "group": "inline",
+                    "command": "tabsterHot.removeItem",
+                    "when": "view == tabsterHot && viewItem == item"
+                }
+            ]
+        },
+        "views": {
+            "tabsterActivity": [
+                {
+                    "id": "tabsterHot",
+                    "name": "hot tabs",
+                    "visibility": "collapsed"
+                },
+                {
+                    "id": "tabster",
+                    "name": "common tabs",
+                    "visibility": "visible"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "tabster.refreshTreeView",
+                "title": "Refresh",
+                "icon": {
+                    "dark": "assets/icons/refresh-dark.svg",
+                    "light": "assets/icons/refresh-light.svg"
+                }
+            },
+            {
+                "command": "tabsterHot.refreshTreeView",
+                "title": "Refresh",
+                "icon": {
+                    "dark": "assets/icons/refresh-dark.svg",
+                    "light": "assets/icons/refresh-light.svg"
+                }
+            },
+            {
+                "command": "tabster.clearTreeView",
+                "title": "Clear",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabsterHot.clearTreeView",
+                "title": "Clear",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabster.activateTabs",
+                "title": "Activate",
+                "icon": {
+                    "dark": "assets/icons/activate-dark.svg",
+                    "light": "assets/icons/activate-light.svg"
+                }
+            },
+            {
+                "command": "tabsterHot.activateTabs",
+                "title": "Activate",
+                "icon": {
+                    "dark": "assets/icons/activate-dark.svg",
+                    "light": "assets/icons/activate-light.svg"
+                }
+            },
+            {
+                "command": "tabster.editTabsLabel",
+                "title": "Edit label",
+                "icon": {
+                    "dark": "assets/icons/edit-dark.svg",
+                    "light": "assets/icons/edit-dark.svg"
+                }
+            },
+            {
+                "command": "tabster.removeTabs",
+                "title": "Remove",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabster.removeItem",
+                "title": "Remove",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabsterHot.removeTabs",
+                "title": "Remove",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabsterHot.removeItem",
+                "title": "Remove",
+                "icon": {
+                    "dark": "assets/icons/remove-dark.svg",
+                    "light": "assets/icons/remove-light.svg"
+                }
+            },
+            {
+                "command": "tabster.saveTabs",
+                "title": "Save tabs"
+            },
+            {
+                "command": "tabsterHot.save_set0",
+                "title": "Save tabs set 0"
+            },
+            {
+                "command": "tabsterHot.save_set1",
+                "title": "Save tabs set 1"
+            },
+            {
+                "command": "tabsterHot.save_set2",
+                "title": "Save tabs set 2"
+            },
+            {
+                "command": "tabsterHot.save_set3",
+                "title": "Save tabs set 3"
+            },
+            {
+                "command": "tabsterHot.save_set4",
+                "title": "Save tabs set 4"
+            },
+            {
+                "command": "tabsterHot.save_set5",
+                "title": "Save tabs set 5"
+            },
+            {
+                "command": "tabsterHot.save_set6",
+                "title": "Save tabs set 6"
+            },
+            {
+                "command": "tabsterHot.save_set7",
+                "title": "Save tabs set 7"
+            },
+            {
+                "command": "tabsterHot.save_set8",
+                "title": "Save tabs set 8"
+            },
+            {
+                "command": "tabsterHot.save_set9",
+                "title": "Save tabs set 9"
+            },
+            {
+                "command": "tabsterHot.activate_set0",
+                "title": "Activate tabs set 0"
+            },
+            {
+                "command": "tabsterHot.activate_set1",
+                "title": "Activate tabs set 1"
+            },
+            {
+                "command": "tabsterHot.activate_set2",
+                "title": "Activate tabs set 2"
+            },
+            {
+                "command": "tabsterHot.activate_set3",
+                "title": "Activate tabs set 3"
+            },
+            {
+                "command": "tabsterHot.activate_set4",
+                "title": "Activate tabs set 4"
+            },
+            {
+                "command": "tabsterHot.activate_set5",
+                "title": "Activate tabs set 5"
+            },
+            {
+                "command": "tabsterHot.activate_set6",
+                "title": "Activate tabs set 6"
+            },
+            {
+                "command": "tabsterHot.activate_set7",
+                "title": "Activate tabs set 7"
+            },
+            {
+                "command": "tabsterHot.activate_set8",
+                "title": "Activate tabs set 8"
+            },
+            {
+                "command": "tabsterHot.activate_set9",
+                "title": "Activate tabs set 9"
+            }
+        ],
+        "configuration": {
+            "title": "Tabster",
+            "properties": {
+                "tabster.fetchMethod": {
+                    "type": "string",
+                    "default": "iteration",
+                    "description": "Save tabs method",
+                    "enum": [
+                        "iteration"
+                    ],
+                    "enumDescriptions": [
+                        "Iterate over opened editors"
+                    ]
+                },
+                "tabster.activateBehavior": {
+                    "type": "string",
+                    "default": "replace",
+                    "description": "Tabs activation behavior",
+                    "enum": [
+                        "replace",
+                        "append"
+                    ],
+                    "enumDescriptions": [
+                        "Replace currently opened tabs",
+                        "Append new tabs in row with currently opened"
+                    ]
+                },
+                "tabster.saveTabsOrder": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Save tabs order on load (slow). You can turn off this option to speed up tabs activation process"
+                }
+            }
+        },
+        "keybindings": [
+            {
+                "command": "tabster.saveTabs",
+                "key": "ctrl+alt+S",
+                "mac": "cmd+ctrl+S"
+            },
+            {
+                "command": "tabsterHot.save_set0",
+                "key": "ctrl+alt+0",
+                "mac": "cmd+ctrl+0"
+            },
+            {
+                "command": "tabsterHot.save_set1",
+                "key": "ctrl+alt+1",
+                "mac": "cmd+ctrl+1"
+            },
+            {
+                "command": "tabsterHot.save_set2",
+                "key": "ctrl+alt+2",
+                "mac": "cmd+ctrl+2"
+            },
+            {
+                "command": "tabsterHot.save_set3",
+                "key": "ctrl+alt+3",
+                "mac": "cmd+ctrl+3"
+            },
+            {
+                "command": "tabsterHot.save_set4",
+                "key": "ctrl+alt+4",
+                "mac": "cmd+ctrl+4"
+            },
+            {
+                "command": "tabsterHot.save_set5",
+                "key": "ctrl+alt+5",
+                "mac": "cmd+ctrl+5"
+            },
+            {
+                "command": "tabsterHot.save_set6",
+                "key": "ctrl+alt+6",
+                "mac": "cmd+ctrl+6"
+            },
+            {
+                "command": "tabsterHot.save_set7",
+                "key": "ctrl+alt+7",
+                "mac": "cmd+ctrl+7"
+            },
+            {
+                "command": "tabsterHot.save_set8",
+                "key": "ctrl+alt+8",
+                "mac": "cmd+ctrl+8"
+            },
+            {
+                "command": "tabsterHot.save_set9",
+                "key": "ctrl+alt+9",
+                "mac": "cmd+ctrl+9"
+            },
+            {
+                "command": "tabsterHot.activate_set0",
+                "key": "alt+0",
+                "mac": "cmd+0"
+            },
+            {
+                "command": "tabsterHot.activate_set1",
+                "key": "alt+1",
+                "mac": "cmd+1"
+            },
+            {
+                "command": "tabsterHot.activate_set2",
+                "key": "alt+2",
+                "mac": "cmd+2"
+            },
+            {
+                "command": "tabsterHot.activate_set3",
+                "key": "alt+3",
+                "mac": "cmd+3"
+            },
+            {
+                "command": "tabsterHot.activate_set4",
+                "key": "alt+4",
+                "mac": "cmd+4"
+            },
+            {
+                "command": "tabsterHot.activate_set5",
+                "key": "alt+5",
+                "mac": "cmd+5"
+            },
+            {
+                "command": "tabsterHot.activate_set6",
+                "key": "alt+6",
+                "mac": "cmd+6"
+            },
+            {
+                "command": "tabsterHot.activate_set7",
+                "key": "alt+7",
+                "mac": "cmd+7"
+            },
+            {
+                "command": "tabsterHot.activate_set8",
+                "key": "alt+8",
+                "mac": "cmd+8"
+            },
+            {
+                "command": "tabsterHot.activate_set9",
+                "key": "alt+9",
+                "mac": "cmd+9"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "webpack --mode production",
+        "build": "tsc -p .",
+        "watch": "tsc --watch -p .",
+        "test": "mocha --config ./.mocharc.json",
+        "lint": "eslint src --ext ts",
+        "pretest": "yarn run build && yarn run lint"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.0",
+        "@types/vscode": "^1.45.0",
+        "@typescript-eslint/eslint-plugin": "^2.30.0",
+        "@typescript-eslint/parser": "^2.30.0",
+        "eslint": "^6.8.0",
+        "glob": "^7.1.6",
+        "mocha": "^7.1.2",
+        "ts-loader": "^8.0.7",
+        "typescript": "^3.8.3",
+        "vscode-test": "^1.3.0",
+        "webpack": "^5.3.2",
+        "webpack-cli": "^4.1.0"
+    },
+    "dependencies": {}
+}
