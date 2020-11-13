@@ -7,7 +7,7 @@ export abstract class Command extends Disposable {
     static NEXT_EDITOR = "workbench.action.nextEditor";
     static FIRST_EDITOR = "workbench.action.firstEditorInGroup";
 
-    constructor(command: string) {
+    constructor(command: string, private isLocked: boolean = false) {
         super(() => this.dispose());
         this.disposable = commands.registerCommand(command, this.execute, this);
     }

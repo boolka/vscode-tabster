@@ -1,7 +1,26 @@
 # Change Log
 
-[Keep a Changelog](http://keepachangelog.com/)
-
 ## [0.0.1] - 2020-11-10
 
 Initial release
+
+## [0.0.2] - 2020-11-12
+
+### Added
+
+- Consider editor column
+- Ability to open arbitrary document from any group
+
+### Changed
+
+- Extension icon
+- Updated preview
+- Exchange default common and hot groups view position
+- Document label in tab group list
+- Readme file is more fine look
+- Save behavior to common tabs group (able to edit group with same label)
+
+### Fixed
+
+- Prevent commands race condition
+- Execution bug when no item is sent to command handler

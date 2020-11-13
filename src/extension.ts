@@ -7,10 +7,14 @@ import {
     TABSTER_OUTPUT_CHANNEL,
     TTabsterConfigActivateBehavior,
     TTabsterConfigFetchMethod,
-    WorkspaceActiveDocuments,
+    WorkspaceActiveEditors,
     TABSTER_CONFIG_SAVE_TABS_ORDER,
 } from "./core";
-import { TabsterDataProvider, WORKSPACE_ERR_MSG } from "./modules/tabster";
+import {
+    OpenItem,
+    TabsterDataProvider,
+    WORKSPACE_ERR_MSG,
+} from "./modules/tabster";
 import {
     ActivateTabs,
     ClearTreeView,
@@ -77,7 +81,7 @@ export async function activate(context: ExtensionContext) {
     );
     disposes.push(onDidChangeConfigurationDispose);
 
-    const workspaceActiveDocuments = new WorkspaceActiveDocuments();
+    const workspaceActiveDocuments = new WorkspaceActiveEditors();
 
     workspaceActiveDocuments.init(tabsterFetchMethodSetting);
 
@@ -134,7 +138,7 @@ export async function activate(context: ExtensionContext) {
     const removeTabs = new RemoveTabs(tabsterCommon, tabsterCommonDataProvider);
     const removeFile = new RemoveItem(tabsterCommon, tabsterCommonDataProvider);
     const removeHotTabs = new RemoveHotTabs(tabsterHot, tabsterHotDataProvider);
-    const removeHotFile = new RemoveHotItem(tabsterHot, tabsterHotDataProvider);
+    const removeHotItem = new RemoveHotItem(tabsterHot, tabsterHotDataProvider);
     const saveTabs = new SaveTabs(tabsterCommon, tabsterCommonDataProvider);
     const activateTabs = new ActivateTabs(
         tabsterCommon,
@@ -144,6 +148,7 @@ export async function activate(context: ExtensionContext) {
         tabsterHot,
         tabsterHotDataProvider,
     );
+    const openDocument = new OpenItem();
 
     for (let i = 0; i < 10; ++i) {
         const saveCommand = TABSTER_HOT_SAVE_COMMANDS[i];
@@ -179,10 +184,11 @@ export async function activate(context: ExtensionContext) {
     disposes.push(removeTabs);
     disposes.push(removeFile);
     disposes.push(removeHotTabs);
-    disposes.push(removeHotFile);
+    disposes.push(removeHotItem);
     disposes.push(saveTabs);
     disposes.push(activateTabs);
     disposes.push(activateHotTabsMenu);
+    disposes.push(openDocument);
 
     disposes.forEach((disposable) => subscriptions.push(disposable));
 }

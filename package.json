@@ -3,7 +3,7 @@
     "displayName": "Tabster",
     "description": "Work with vscode tabs",
     "icon": "assets/icons/icon.png",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.45.0",
         "node": ">=12.0.0"
@@ -16,7 +16,8 @@
         "tabs",
         "tab groups",
         "manage tabs",
-        "editors"
+        "editors",
+        "restore editors"
     ],
     "main": "./dist/extension",
     "license": "MIT",
@@ -142,14 +143,14 @@
         "views": {
             "tabsterActivity": [
                 {
-                    "id": "tabsterHot",
-                    "name": "hot tabs",
-                    "visibility": "collapsed"
-                },
-                {
                     "id": "tabster",
                     "name": "common tabs",
                     "visibility": "visible"
+                },
+                {
+                    "id": "tabsterHot",
+                    "name": "hot tabs",
+                    "visibility": "collapsed"
                 }
             ]
         },

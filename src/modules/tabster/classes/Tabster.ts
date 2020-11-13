@@ -2,29 +2,39 @@ import {
     Memento,
     TreeItemCollapsibleState,
     Uri,
+    ViewColumn,
     window,
     workspace,
 } from "vscode";
-import {
-    getUriId,
-    Tree,
-    TreeNode,
-    WorkspaceActiveDocuments,
-} from "../../../core";
+import { Logger, Tree, TreeNode, WorkspaceActiveEditors } from "../../../core";
 import { THotLabel } from "../../tabster-hot";
-import { TTabsterTree, TTabsterTreeItem } from "../models";
+import { IDocumentInfo, TTabsterTree, TTabsterTreeItem } from "../models";
 import { TabsterTreeDocumentItem } from "../workspace/TabsterTreeDocumentItem";
 import { TabsterTreeTabsItem } from "../workspace/TabsterTreeTabsItem";
+
+const logger = new Logger();
 
 export abstract class Tabster {
     public viewTree: TTabsterTree;
 
     constructor(
-        private workspaceActiveDocuments: WorkspaceActiveDocuments,
+        private workspaceActiveDocuments: WorkspaceActiveEditors,
         protected memento: Memento,
         private mementoKey: string,
         private saveTabsOrder: boolean,
     ) {}
+
+    private sortByEditorGroups(docs: IDocumentInfo[]) {
+        const res: IDocumentInfo[] = [];
+
+        for (let i = 0; i < docs.length; ++i) {
+            res.push(Object.assign({}, docs[i]));
+        }
+
+        res.sort((a, b) => a.viewColumn - b.viewColumn);
+
+        return res;
+    }
 
     async saveView() {
         await this.memento.update(this.mementoKey, this.viewTree);
@@ -37,10 +47,10 @@ export abstract class Tabster {
         // Rescue saved data
         viewTree.traverse((item: TreeNode<TTabsterTreeItem>) => {
             if (TabsterTreeDocumentItem.isInstance(item.data)) {
-                item.data = new TabsterTreeDocumentItem(
-                    item.data.docId,
-                    item.data.label,
-                );
+                item.data = new TabsterTreeDocumentItem(item.data.label, {
+                    docId: item.data.info.docId,
+                    viewColumn: item.data.info.viewColumn,
+                });
             } else if (TabsterTreeTabsItem.isInstance(item.data)) {
                 item.data = new TabsterTreeTabsItem(
                     item.data.label,
@@ -62,13 +72,14 @@ export abstract class Tabster {
     abstract async removeTab(key: string): Promise<void>;
     abstract async removeItem(key: string): Promise<void>;
 
-    async getDocuments() {
-        return await this.workspaceActiveDocuments.getDocuments();
+    async getEditors() {
+        return await this.workspaceActiveDocuments.getEditors();
     }
 
-    private async showDocument(uri: Uri) {
+    private async showDocument(doc: IDocumentInfo, showBeside: boolean) {
         return new Promise<Uri>(async (resolve) => {
-            const docId = getUriId(uri);
+            const docId = doc.docId;
+            const uri = Uri.parse(docId);
             let document;
 
             try {
@@ -77,9 +88,20 @@ export abstract class Tabster {
                 if (document != null) {
                     try {
                         await window.showTextDocument(document, {
-                            preserveFocus: true,
+                            preserveFocus: showBeside ? false : true,
+                            viewColumn: showBeside
+                                ? ViewColumn.Beside
+                                : ViewColumn.Active,
                             preview: false,
                         });
+
+                        logger.debug(
+                            `Document ${docId}(viewColumn: ${
+                                ViewColumn[doc.viewColumn]
+                            }) is shown in ${
+                                showBeside ? "beside" : "active"
+                            } column`,
+                        );
                     } catch (err) {}
                 }
 
@@ -99,16 +121,45 @@ export abstract class Tabster {
         });
     }
 
-    async showDocuments(uris: Uri[]) {
-        if (this.saveTabsOrder) {
-            for (let i = 0; i < uris.length; ++i) {
-                const uri = uris[i];
+    async showDocuments(docs: IDocumentInfo[]) {
+        const sortedDocs = this.sortByEditorGroups(docs);
 
-                await this.showDocument(uri);
+        let prevViewColumn = ViewColumn.Active;
+
+        for (let i = 0; i < sortedDocs.length; ++i) {
+            const doc = sortedDocs[i];
+
+            if (doc.viewColumn != null) {
+                prevViewColumn = doc.viewColumn;
+                break;
+            }
+        }
+
+        if (this.saveTabsOrder) {
+            for (let i = 0; i < sortedDocs.length; ++i) {
+                const doc = sortedDocs[i];
+                let showBeside = false;
+
+                if (doc.viewColumn != null) {
+                    showBeside = prevViewColumn !== doc.viewColumn;
+                }
+
+                await this.showDocument(doc, showBeside);
+
+                if (doc.viewColumn != null) {
+                    prevViewColumn = doc.viewColumn;
+                }
             }
         } else {
-            const promises: Array<Promise<Uri>> = uris.map<Promise<Uri>>(
-                (uri) => this.showDocument(uri),
+            const promises: Array<Promise<Uri>> = sortedDocs.map<Promise<Uri>>(
+                (doc) => {
+                    const showBeside = prevViewColumn !== doc.viewColumn;
+                    const docPromise = this.showDocument(doc, showBeside);
+
+                    prevViewColumn = doc.viewColumn;
+
+                    return docPromise;
+                },
             );
             return Promise.all(promises);
         }

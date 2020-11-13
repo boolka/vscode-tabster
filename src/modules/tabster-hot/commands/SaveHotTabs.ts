@@ -1,9 +1,10 @@
 import { ProgressLocation, window } from "vscode";
-import { Command } from "../../../core";
+import { Command, Mutex } from "../../../core";
 import { SAVING_MSG, TabsterDataProvider } from "../../tabster";
 import { TabsterHot } from "../classes/TabsterHot";
 import { THotLabel } from "../models";
 
+@Mutex(["execute"])
 export class SaveHotTabs extends Command {
     constructor(
         private tabster: TabsterHot,

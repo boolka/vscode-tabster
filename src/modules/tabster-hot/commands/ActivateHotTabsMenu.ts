@@ -1,5 +1,5 @@
 import { ProgressLocation, window } from "vscode";
-import { Command, TreeNode } from "../../../core";
+import { Command, Mutex, TreeNode } from "../../../core";
 import {
     LOADING_MSG,
     TabsterDataProvider,
@@ -8,6 +8,7 @@ import {
 import { TabsterHot } from "../classes/TabsterHot";
 import { TABSTER_HOT_ACTIVATE_COMMAND } from "../consts";
 
+@Mutex(["execute"])
 export class ActivateHotTabsMenu extends Command {
     constructor(
         private tabster: TabsterHot,
@@ -17,6 +18,10 @@ export class ActivateHotTabsMenu extends Command {
     }
 
     async execute(tabsItem: TreeNode<TTabsterTreeItem>) {
+        if (tabsItem == null) {
+            return;
+        }
+
         await window.withProgress(
             {
                 location: ProgressLocation.Notification,

@@ -2,16 +2,16 @@ import {
     commands,
     Memento,
     TextDocument,
+    TextEditor,
     TreeItemCollapsibleState,
     Uri,
-    window,
 } from "vscode";
 import {
     Command,
     ErrorBoundary,
     AsyncErrorBoundary,
     TabsterConfigActivateBehavior,
-    WorkspaceActiveDocuments,
+    WorkspaceActiveEditors,
     getDocId,
     getDocLabel,
 } from "../../../core";
@@ -21,6 +21,7 @@ import {
     TabsterTreeDocumentItem,
     TabsterTreeTabsItem,
 } from "../../tabster";
+import { IDocumentInfo } from "../../tabster/models";
 import { TABSTER_HOT_REFRESH_TREE_VIEW_COMMAND } from "../consts";
 import { THotLabel } from "../models";
 import { getLabelSortOrder, isHotLabel } from "../utils";
@@ -43,7 +44,7 @@ export class TabsterHot extends Tabster {
     public static readonly HOT_TABS_LABEL = "hot tabs";
 
     constructor(
-        workspaceActiveDocuments: WorkspaceActiveDocuments,
+        workspaceActiveDocuments: WorkspaceActiveEditors,
         memento: Memento,
         private options: ITabsterOptions,
     ) {
@@ -63,9 +64,9 @@ export class TabsterHot extends Tabster {
             return;
         }
 
-        const documents: TextDocument[] = await this.getDocuments();
+        const editors: TextEditor[] = await this.getEditors();
 
-        if (documents.length === 0) {
+        if (editors.length === 0) {
             this.viewTree.removeById(label);
         } else {
             const item = new TabsterTreeTabsItem(
@@ -73,28 +74,34 @@ export class TabsterHot extends Tabster {
                 TreeItemCollapsibleState.Collapsed,
             );
             const node = this.viewTree.searchById(label);
-            let parentNode;
+            let resultingNode;
 
             if (node != null) {
-                parentNode = node;
+                resultingNode = node;
                 this.viewTree.updateById(node.id, item);
                 this.viewTree.removeChildrensById(node.id);
             } else {
-                parentNode = this.viewTree.add(item, {
+                resultingNode = this.viewTree.add(item, {
                     customId: label,
                 });
             }
 
-            nodeId = parentNode.id;
+            nodeId = resultingNode.id;
 
-            for (const document of documents) {
-                const docId = getDocId(document);
-                const label = getDocLabel(document);
+            for (const editor of editors) {
+                const docId = getDocId(editor.document);
+                const label = getDocLabel(editor.document);
 
-                this.viewTree.add(new TabsterTreeDocumentItem(docId, label), {
-                    customId: docId,
-                    parentId: parentNode.id,
-                });
+                this.viewTree.add(
+                    new TabsterTreeDocumentItem(label, {
+                        docId,
+                        viewColumn: editor.viewColumn,
+                    }),
+                    {
+                        customId: docId,
+                        parentId: resultingNode.id,
+                    },
+                );
             }
         }
 
@@ -116,17 +123,17 @@ export class TabsterHot extends Tabster {
     }
 
     async activateTab(key: THotLabel | string) {
-        let uris: Uri[];
+        let docsInfo: IDocumentInfo[];
 
         const foundNode = this.viewTree.searchById(key);
 
         if (foundNode != null) {
-            uris = foundNode.childrens.map((children) =>
-                Uri.parse(children.data.docId),
+            docsInfo = foundNode.childrens.map(
+                (children) => children.data.info,
             );
         }
 
-        if (uris != null) {
+        if (docsInfo != null) {
             if (
                 this.options.activateBehavior ===
                 TabsterConfigActivateBehavior.Replace
@@ -134,7 +141,7 @@ export class TabsterHot extends Tabster {
                 await commands.executeCommand(Command.CLOSE_ALL_EDITORS);
             }
 
-            await this.showDocuments(uris);
+            await this.showDocuments(docsInfo);
             await commands.executeCommand(Command.FIRST_EDITOR);
             commands.executeCommand(TABSTER_HOT_REFRESH_TREE_VIEW_COMMAND);
         }

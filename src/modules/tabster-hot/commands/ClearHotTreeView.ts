@@ -1,8 +1,9 @@
-import { Command } from "../../../core";
+import { Command, Mutex } from "../../../core";
 import { TabsterDataProvider } from "../../tabster";
 import { TabsterHot } from "../classes/TabsterHot";
 import { TABSTER_HOT_CLEAR_TREE_VIEW_COMMAND } from "../consts";
 
+@Mutex(["execute"])
 export class ClearHotTreeView extends Command {
     constructor(
         private tabster: TabsterHot,

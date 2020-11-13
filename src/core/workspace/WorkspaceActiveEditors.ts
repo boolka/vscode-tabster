@@ -1,7 +1,7 @@
-import { TextDocument, window } from "vscode";
+import { TextEditor, ViewColumn, window } from "vscode";
 import { TabsterConfigFetchMethod } from "../consts";
 import { TTabsterConfigFetchMethod } from "../models";
-import { isEqualDocuments } from "../utils/assert";
+import { isEqualEditors } from "../utils/assert";
 import { AsyncErrorBoundary } from "../utils/error";
 import { Logger } from "../utils/Logger";
 import { Singleton } from "../utils/Singleton";
@@ -10,17 +10,17 @@ import { WorkbenchEditorIterator } from "./WorkbenchEditorIterator";
 const logger = new Logger();
 
 @AsyncErrorBoundary(["init", "load", "getDocuments"])
-export class WorkspaceActiveDocuments extends Singleton {
-    private documents: TextDocument[] = [];
+export class WorkspaceActiveEditors extends Singleton {
+    private editors: TextEditor[] = [];
     private fetchMethod: TTabsterConfigFetchMethod;
 
     constructor() {
-        super(WorkspaceActiveDocuments);
+        super(WorkspaceActiveEditors);
     }
 
-    private indexOf(document: TextDocument) {
-        for (let i = 0; i < this.documents.length; ++i) {
-            if (isEqualDocuments(this.documents[i], document)) {
+    private indexOf(editor: TextEditor) {
+        for (let i = 0; i < this.editors.length; ++i) {
+            if (isEqualEditors(this.editors[i], editor)) {
                 return i;
             }
         }
@@ -28,16 +28,16 @@ export class WorkspaceActiveDocuments extends Singleton {
         return -1;
     }
 
-    private async add(document: TextDocument) {
-        const indexOfDocument = this.indexOf(document);
+    private async add(editor: TextEditor) {
+        const indexOfDocument = this.indexOf(editor);
 
         if (indexOfDocument === -1) {
-            this.documents.push(document);
+            this.editors.push(editor);
         }
     }
 
     private clear() {
-        this.documents = [];
+        this.editors = [];
     }
 
     async init(fetchMethod: TTabsterConfigFetchMethod) {
@@ -50,7 +50,7 @@ export class WorkspaceActiveDocuments extends Singleton {
         this.clear();
 
         for await (const editor of new WorkbenchEditorIterator()) {
-            await this.add(editor.document);
+            await this.add(editor);
         }
 
         if (currentTextEditor != null) {
@@ -60,7 +60,7 @@ export class WorkspaceActiveDocuments extends Singleton {
         }
     }
 
-    public async getDocuments() {
+    public async getEditors() {
         switch (this.fetchMethod) {
             case TabsterConfigFetchMethod.Iteration:
             default: {
@@ -70,14 +70,16 @@ export class WorkspaceActiveDocuments extends Singleton {
         }
 
         logger.debug(
-            `${
-                WorkspaceActiveDocuments.name
-            }#getDocuments: ${this.documents.reduce(
-                (acc, doc) => acc + `\n${doc.uri.toString(true)}`,
+            `${WorkspaceActiveEditors.name}#getEditors: ${this.editors.reduce(
+                (acc, editor) =>
+                    acc +
+                    `\n${editor.document.uri.toString(true)}: viewColumn is ${
+                        ViewColumn[editor.viewColumn]
+                    }`,
                 "",
             )}`,
         );
 
-        return this.documents;
+        return this.editors;
     }
 }
