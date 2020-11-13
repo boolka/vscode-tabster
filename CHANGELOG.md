@@ -24,3 +24,9 @@ Initial release
 
 - Prevent commands race condition
 - Execution bug when no item is sent to command handler
+
+## [0.0.3] - 2020-11-13
+
+### Fixed
+
+- README.md Extension Settings table

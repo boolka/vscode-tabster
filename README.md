@@ -27,6 +27,8 @@ When you install the Tabster extension in your activity bar will be available ne
       - [Added](#added)
       - [Changed](#changed)
       - [Fixed](#fixed)
+    - [[0.0.3] - 2020-11-13](#003---2020-11-13)
+      - [Fixed](#fixed-1)
 
 ## Features
 
@@ -69,8 +71,8 @@ Click at:
 
 | Name                       | Default   | Values           | Description                                                                                                                 |
 | -------------------------- | --------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `tabster.activateBehavior` | `replace` | `replace|append` | On tabs activating all previous tabs will be closed. `append` - tabs will be appended to exist ones.                        |
-| `tabster.saveTabsOrder`    | `true`    | `true|false`     | Save tabs order on load (slow). You can turn off this option to speed up tabs activation process with excuse of tabs order. |
+| `tabster.activateBehavior` | `replace` | `replace/append` | On tabs activating all previous tabs will be closed. `append` - tabs will be appended to exist ones.                        |
+| `tabster.saveTabsOrder`    | `true`    | `true/false`     | Save tabs order on load (slow). You can turn off this option to speed up tabs activation process with excuse of tabs order. |
 
 ## Known Issues
 
@@ -112,3 +114,9 @@ Initial release
 
 - Prevent commands race condition
 - Execution bug when no item is sent to command handler
+
+### [0.0.3] - 2020-11-13
+
+#### Fixed
+
+- README.md Extension Settings table
