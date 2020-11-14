@@ -21,14 +21,6 @@ When you install the Tabster extension in your activity bar will be available ne
   - [Extension Settings](#extension-settings)
   - [Known Issues](#known-issues)
   - [Todo](#todo)
-  - [Release Notes](#release-notes)
-    - [[0.0.1] - 2020-11-10](#001---2020-11-10)
-    - [[0.0.2] - 2020-11-12](#002---2020-11-12)
-      - [Added](#added)
-      - [Changed](#changed)
-      - [Fixed](#fixed)
-    - [[0.0.3] - 2020-11-13](#003---2020-11-13)
-      - [Fixed](#fixed-1)
 
 ## Features
 
@@ -76,6 +68,8 @@ Click at:
 
 ## Known Issues
 
+> If you have any problems with extension especially when comes new update clear extension cache and reload application. In extra case roll back version and clear all tab groups then reload and update version back.
+
 - Not all tabs can be saved (some media files).
 - Saving/activating tab groups takes long time to go.
 
@@ -83,40 +77,9 @@ Click at:
 
 ## Todo
 
+- Fix icons in marketplace (can't seen on light background)
+- Sort tab group items (documents)
 - Open diff files properly
 - Save/load tabs quickly
 - Open documents from source control arbitrary revisions
 - Add DnD functionality to tab group list
-
-## Release Notes
-
-### [0.0.1] - 2020-11-10
-
-Initial release
-
-### [0.0.2] - 2020-11-12
-
-#### Added
-
-- Consider editor column
-- Ability to open arbitrary document from any group
-
-#### Changed
-
-- Extension icon
-- Updated preview
-- Exchange default common and hot groups view position
-- Document label in tab group list
-- Readme file is more fine look
-- Save behavior to common tabs group (able to edit group with same label)
-
-#### Fixed
-
-- Prevent commands race condition
-- Execution bug when no item is sent to command handler
-
-### [0.0.3] - 2020-11-13
-
-#### Fixed
-
-- README.md Extension Settings table

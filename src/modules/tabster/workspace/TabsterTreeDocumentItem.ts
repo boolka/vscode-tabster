@@ -1,5 +1,6 @@
 import { TreeItem, TreeItemCollapsibleState, ViewColumn } from "vscode";
-import { basename } from "path";
+import * as path from "path";
+import { platform } from "os";
 import { TabsterTreeViewContext } from "../../../core";
 import { TABSTER_OPEN_ITEM_COMMAND } from "../consts";
 import { IDocumentInfo } from "../models";
@@ -22,9 +23,6 @@ export class TabsterTreeDocumentItem extends TreeItem {
 
     private getViewLocationDesc(viewColumn: ViewColumn) {
         switch (viewColumn) {
-            case ViewColumn.One: {
-                return "First column";
-            }
             case ViewColumn.Two: {
                 return "Second column";
             }
@@ -61,7 +59,15 @@ export class TabsterTreeDocumentItem extends TreeItem {
         public collapsibleState?: TreeItemCollapsibleState,
     ) {
         super(label, collapsibleState);
-        const shortLabel = basename(label);
+
+        let shortLabel;
+
+        if (platform() === "win32") {
+            shortLabel = path.win32.basename(label);
+        } else {
+            shortLabel = path.basename(label);
+        }
+
         const locationDesc = this.getViewLocationDesc(this.info.viewColumn);
 
         this.label = shortLabel;

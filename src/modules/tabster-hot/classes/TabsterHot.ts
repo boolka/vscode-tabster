@@ -1,10 +1,8 @@
 import {
     commands,
     Memento,
-    TextDocument,
     TextEditor,
     TreeItemCollapsibleState,
-    Uri,
 } from "vscode";
 import {
     Command,

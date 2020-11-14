@@ -30,3 +30,17 @@ Initial release
 ### Fixed
 
 - README.md Extension Settings table
+
+## [0.0.4] - 2020-11-14
+
+### Changed
+
+- Hide first column description (for more readability)
+
+### Fixed
+
+- Bug with windows paths that crushed extension
+
+### Removed
+
+- Release notes from README.md

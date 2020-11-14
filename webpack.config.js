@@ -27,5 +27,6 @@ module.exports = {
         vscode: "commonjs vscode",
         util: "commonjs util",
         path: "commonjs path",
+        os: "commonjs os",
     },
 };
