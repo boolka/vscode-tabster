@@ -3,7 +3,6 @@ import {
     Memento,
     TextEditor,
     TreeItemCollapsibleState,
-    Uri,
 } from "vscode";
 import {
     Command,
@@ -13,6 +12,7 @@ import {
     WorkspaceActiveEditors,
     getDocId,
     getDocLabel,
+    Mutex,
 } from "../../../core";
 import {
     ITabsterOptions,
@@ -34,6 +34,7 @@ import { TABSTER_REFRESH_TREE_VIEW_COMMAND } from "../consts";
     "removeTab",
     "removeFile",
 ])
+@Mutex(["addTab"])
 export class TabsterCommon extends Tabster {
     public static readonly MEMENTO_KEY = "TabsterCommon";
 
@@ -47,6 +48,7 @@ export class TabsterCommon extends Tabster {
             memento,
             TabsterCommon.MEMENTO_KEY,
             options.saveTabsOrder,
+            options.skipPinnedTabs,
         );
         this.loadView();
     }

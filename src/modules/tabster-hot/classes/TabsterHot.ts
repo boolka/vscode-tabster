@@ -12,7 +12,9 @@ import {
     WorkspaceActiveEditors,
     getDocId,
     getDocLabel,
+    Mutex,
 } from "../../../core";
+import { sleep } from "../../../core/utils/async";
 import {
     ITabsterOptions,
     Tabster,
@@ -35,6 +37,7 @@ import { getLabelSortOrder, isHotLabel } from "../utils";
     "removeTab",
     "removeFile",
 ])
+@Mutex(["addTab"])
 export class TabsterHot extends Tabster {
     protected readonly HOT_TABS_KEY = "HOT_TABS_KEY";
 
@@ -51,6 +54,7 @@ export class TabsterHot extends Tabster {
             memento,
             TabsterHot.MEMENTO_KEY,
             options.saveTabsOrder,
+            options.skipPinnedTabs,
         );
         this.loadView();
     }

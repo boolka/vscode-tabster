@@ -3,7 +3,7 @@
     "displayName": "Tabster",
     "description": "Work with vscode tabs",
     "icon": "assets/icons/icon.png",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "engines": {
         "vscode": "^1.45.0",
         "node": ">=12.0.0"
@@ -359,6 +359,11 @@
                     "type": "boolean",
                     "default": "true",
                     "description": "Save tabs order on load (slow). You can turn off this option to speed up tabs activation process"
+                },
+                "tabster.skipPinnedTabs": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Skip pinned tabs on save"
                 }
             }
         },

@@ -4,10 +4,10 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "vscode:prepublish",
             "type": "npm",
             "script": "vscode:prepublish",
             "problemMatcher": [],
-            "label": "vscode:prepublish",
             "detail": "webpack --mode production"
         }
     ]

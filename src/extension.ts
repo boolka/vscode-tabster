@@ -9,6 +9,7 @@ import {
     TTabsterConfigFetchMethod,
     WorkspaceActiveEditors,
     TABSTER_CONFIG_SAVE_TABS_ORDER,
+    TABSTER_CONFIG_SKIP_PINNED_TABS,
 } from "./core";
 import {
     OpenItem,
@@ -58,22 +59,25 @@ export async function activate(context: ExtensionContext) {
     logger.init(tabsterOutputChannel, extensionMode);
 
     const tabsterConfigs = workspace.getConfiguration(TABSTER_CONFIG_NS);
-    const tabsterFetchMethodSetting = tabsterConfigs.get<
-        TTabsterConfigFetchMethod
-    >(TABSTER_CONFIG_FETCH_METHOD);
-    const tabsterActivateBehavior = tabsterConfigs.get<
-        TTabsterConfigActivateBehavior
-    >(TABSTER_CONFIG_ACTIVATE_BEHAVIOR);
+    const tabsterFetchMethodSetting = tabsterConfigs.get<TTabsterConfigFetchMethod>(
+        TABSTER_CONFIG_FETCH_METHOD,
+    );
+    const tabsterActivateBehavior = tabsterConfigs.get<TTabsterConfigActivateBehavior>(
+        TABSTER_CONFIG_ACTIVATE_BEHAVIOR,
+    );
     const saveTabsOrder = tabsterConfigs.get<boolean>(
         TABSTER_CONFIG_SAVE_TABS_ORDER,
+    );
+    const skipPinnedTabs = tabsterConfigs.get<boolean>(
+        TABSTER_CONFIG_SKIP_PINNED_TABS,
     );
 
     const onDidChangeConfigurationDispose = workspace.onDidChangeConfiguration(
         (section) => {
             if (section.affectsConfiguration(TABSTER_CONFIG_NS)) {
-                const newTabsterFetchMethodSetting = tabsterConfigs.get<
-                    TTabsterConfigFetchMethod
-                >(TABSTER_CONFIG_FETCH_METHOD);
+                const newTabsterFetchMethodSetting = tabsterConfigs.get<TTabsterConfigFetchMethod>(
+                    TABSTER_CONFIG_FETCH_METHOD,
+                );
 
                 workspaceActiveDocuments.init(newTabsterFetchMethodSetting);
             }
@@ -91,11 +95,13 @@ export async function activate(context: ExtensionContext) {
         {
             activateBehavior: tabsterActivateBehavior,
             saveTabsOrder,
+            skipPinnedTabs,
         },
     );
     tabsterHot = new TabsterHot(workspaceActiveDocuments, workspaceState, {
         activateBehavior: tabsterActivateBehavior,
         saveTabsOrder,
+        skipPinnedTabs,
     });
     const tabsterCommonDataProvider = new TabsterDataProvider(tabsterCommon);
     const tabsterHotDataProvider = new TabsterDataProvider(tabsterHot);

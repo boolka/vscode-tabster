@@ -44,3 +44,9 @@ Initial release
 ### Removed
 
 - Release notes from README.md
+
+## [0.0.5] - 2020-12-27
+
+### Added
+
+- New Feature to skip pinned tabs

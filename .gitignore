@@ -1,5 +1,8 @@
-build
-dist
+/.vscode/**
+!/.vscode/launch.json
+!/.vscode/tasks.json
+/.vscode-test/
+/build
+/dist
 node_modules
-.vscode-test/
 *.vsix

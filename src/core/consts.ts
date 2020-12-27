@@ -4,6 +4,7 @@ export const TABSTER_CONFIG_NS = "tabster";
 export const TABSTER_CONFIG_FETCH_METHOD = "fetchMethod";
 export const TABSTER_CONFIG_ACTIVATE_BEHAVIOR = "activateBehavior";
 export const TABSTER_CONFIG_SAVE_TABS_ORDER = "saveTabsOrder";
+export const TABSTER_CONFIG_SKIP_PINNED_TABS = "skipPinnedTabs";
 
 export enum TabsterView {
     Common = 1,

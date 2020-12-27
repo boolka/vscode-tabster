@@ -1,4 +1,5 @@
 import {
+    commands,
     Memento,
     TreeItemCollapsibleState,
     Uri,
@@ -6,7 +7,15 @@ import {
     window,
     workspace,
 } from "vscode";
-import { Logger, Tree, TreeNode, WorkspaceActiveEditors } from "../../../core";
+import {
+    Command,
+    getDocId,
+    isEqualEditors,
+    Logger,
+    Tree,
+    TreeNode,
+    WorkspaceActiveEditors,
+} from "../../../core";
 import { THotLabel } from "../../tabster-hot";
 import { IDocumentInfo, TTabsterTree, TTabsterTreeItem } from "../models";
 import { TabsterTreeDocumentItem } from "../workspace/TabsterTreeDocumentItem";
@@ -22,6 +31,7 @@ export abstract class Tabster {
         protected memento: Memento,
         private mementoKey: string,
         private saveTabsOrder: boolean,
+        private skipPinnedTabs: boolean,
     ) {}
 
     private sortByEditorGroups(docs: IDocumentInfo[]) {
@@ -67,13 +77,42 @@ export abstract class Tabster {
         await this.memento.update(this.mementoKey, null);
     }
 
-    abstract async addTab(label?: THotLabel | string): Promise<void | string>;
-    abstract async activateTab(key: THotLabel | string): Promise<boolean>;
-    abstract async removeTab(key: string): Promise<void>;
-    abstract async removeItem(key: string): Promise<void>;
+    abstract addTab(label?: THotLabel | string): Promise<void | string>;
+    abstract activateTab(key: THotLabel | string): Promise<boolean>;
+    abstract removeTab(key: string): Promise<void>;
+    abstract removeItem(key: string): Promise<void>;
 
     async getEditors() {
-        return await this.workspaceActiveDocuments.getEditors();
+        let editors = await this.workspaceActiveDocuments.getEditors();
+
+        /*
+            There is no obvious way obvious way to determine if the document is pinned.
+            https://code.visualstudio.com/updates/v1_46#_pin-tabs
+        */
+        if (this.skipPinnedTabs) {
+            await commands.executeCommand(Command.CLOSE_ALL_EDITORS);
+
+            const pinnedEditors = await this.workspaceActiveDocuments.getEditors();
+
+            editors = editors.filter((editor) => {
+                for (const pinnedEditor of pinnedEditors) {
+                    if (isEqualEditors(editor, pinnedEditor)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            await this.showDocuments(
+                editors.map<IDocumentInfo>((editor) => ({
+                    docId: getDocId(editor.document),
+                    viewColumn: editor.viewColumn,
+                })),
+            );
+        }
+
+        return editors;
     }
 
     private async showDocument(doc: IDocumentInfo, showBeside: boolean) {

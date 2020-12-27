@@ -39,7 +39,7 @@ export class WorkbenchEditorIterator
         return this.currentTextEditor;
     }
 
-    async *iterator() {
+    async *[Symbol.asyncIterator]() {
         await commands.executeCommand<TextEditor>(Command.FIRST_EDITOR);
         let firstTextEditor =
             window.activeTextEditor || (await this.switchNextEditor());
@@ -53,9 +53,9 @@ export class WorkbenchEditorIterator
 
         do {
             logger.debug(
-                `${WorkbenchEditorIterator.name}#*${
-                    this.iterator.name
-                }: document path: "${this.currentTextEditor.document.uri.toString(
+                `${
+                    WorkbenchEditorIterator.name
+                }#generator: document path: "${this.currentTextEditor.document.uri.toString(
                     true,
                 )}"`,
             );
@@ -70,10 +70,6 @@ export class WorkbenchEditorIterator
                 this.currentTextEditor.document,
             )
         );
-    }
-
-    [Symbol.asyncIterator]() {
-        return this.iterator();
     }
 
     dispose() {

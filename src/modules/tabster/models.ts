@@ -17,4 +17,5 @@ export type TTabsterTree = Tree<TTabsterTreeItem>;
 export interface ITabsterOptions {
     activateBehavior: TTabsterConfigActivateBehavior;
     saveTabsOrder: boolean;
+    skipPinnedTabs: boolean;
 }

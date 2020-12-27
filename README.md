@@ -65,21 +65,26 @@ Click at:
 | -------------------------- | --------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `tabster.activateBehavior` | `replace` | `replace/append` | On tabs activating all previous tabs will be closed. `append` - tabs will be appended to exist ones.                        |
 | `tabster.saveTabsOrder`    | `true`    | `true/false`     | Save tabs order on load (slow). You can turn off this option to speed up tabs activation process with excuse of tabs order. |
+| `tabster.skipPinnedTabs`   | `false`   | `true/false`     | Skip pinned tabs on save                                                                                                    |
 
 ## Known Issues
 
-> If you have any problems with extension especially when comes new update clear extension cache and reload application. In extra case roll back version and clear all tab groups then reload and update version back.
-
 - Not all tabs can be saved (some media files).
 - Saving/activating tab groups takes long time to go.
+
+> For now you need to reload window when extension config changed.
+
+> If you have any problems with extension especially when comes new update clear extension cache and reload application. In extra case roll back version and clear all tab groups then reload and update version back.
 
 > At all there is no explicit api in vscode to work with editors. Look for this topic for more details ([issue](https://github.com/microsoft/vscode/issues/15178))
 
 ## Todo
 
 - Fix icons in marketplace (can't seen on light background)
+- Make the extension change configuration on the fly
 - Sort tab group items (documents)
 - Open diff files properly
 - Save/load tabs quickly
 - Open documents from source control arbitrary revisions
 - Add DnD functionality to tab group list
+- Open error dialog (with remove option) if particularly activated document is not available

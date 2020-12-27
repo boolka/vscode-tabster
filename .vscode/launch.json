@@ -6,6 +6,7 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Mocha Tests",
             "args": [
                 "-u",
                 "bdd",
@@ -16,7 +17,6 @@
                 "${workspaceFolder}/build/test"
             ],
             "internalConsoleOptions": "openOnSessionStart",
-            "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
