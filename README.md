@@ -86,5 +86,6 @@ Click at:
 - Open diff files properly
 - Save/load tabs quickly
 - Open documents from source control arbitrary revisions
+- Add feature to create grouped tabs
 - Add DnD functionality to tab group list
 - Open error dialog (with remove option) if particularly activated document is not available

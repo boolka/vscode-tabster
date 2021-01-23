@@ -50,3 +50,9 @@ Initial release
 ### Added
 
 - New Feature to skip pinned tabs
+
+## [0.0.6] - 2021-01-23
+
+### Added
+
+- Able to cancel creation of named group of tabs

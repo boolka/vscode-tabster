@@ -16,6 +16,12 @@ export class SaveTabs extends Command {
     async execute() {
         let label = await window.showInputBox();
 
+        // Esc 
+        if (label == null) {
+            return;
+        }
+
+        // Enter on empty input
         if (label === "") {
             label = undefined;
         }
